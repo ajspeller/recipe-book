@@ -1,12 +1,11 @@
 import {
   Component,
   OnInit,
-  Output,
-  EventEmitter,
   ElementRef,
   ViewChild,
 } from '@angular/core';
 import { Ingredient } from '../models/Ingredient.model';
+import { ShoppingListService } from '../shopping-list.service';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -14,13 +13,10 @@ import { Ingredient } from '../models/Ingredient.model';
   styleUrls: ['./shopping-edit.component.scss'],
 })
 export class ShoppingEditComponent implements OnInit {
-  @Output() itemToAdd = new EventEmitter<Ingredient>();
-  @Output() itemToDelete = new EventEmitter<Ingredient>();
-
   @ViewChild('nameInput') nameInputRef: ElementRef;
   @ViewChild('amountInput') amountInputRef: ElementRef;
 
-  constructor() {}
+  constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit(): void {}
 
@@ -31,7 +27,7 @@ export class ShoppingEditComponent implements OnInit {
       return;
     }
     const newItem = new Ingredient(name, amount);
-    this.itemToAdd.emit(newItem);
+    this.shoppingListService.getItemToAdd().emit(newItem);
     this.nameInputRef.nativeElement.value = '';
     this.amountInputRef.nativeElement.value = 1;
   }
@@ -40,14 +36,16 @@ export class ShoppingEditComponent implements OnInit {
     if (!name || !amount) {
       return;
     }
-    this.itemToAdd.emit(new Ingredient(name, +amount));
+    this.shoppingListService.getItemToAdd().emit(new Ingredient(name, +amount));
   }
 
   deleteItem({ value: name }, { value: amount }): void {
     if (!name) {
       return;
     }
-    this.itemToDelete.emit(new Ingredient(name, +amount));
+    this.shoppingListService
+      .getItemToDelete()
+      .emit(new Ingredient(name, +amount));
   }
 
   deleteItemVC(): void {
@@ -55,7 +53,7 @@ export class ShoppingEditComponent implements OnInit {
     if (!name) {
       return;
     }
-    this.itemToDelete.emit(new Ingredient(name, 0));
+    this.shoppingListService.getItemToDelete().emit(new Ingredient(name, 0));
   }
 
   clearFields(): void {
