@@ -21,4 +21,19 @@ export class ShoppingListComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  addItem(item: Ingredient): void {
+    const itemIndex = this.ingredients.findIndex(
+      (i) => i.name.toLowerCase() === item.name.toLowerCase()
+    );
+    if (itemIndex > -1) {
+      this.ingredients[itemIndex].amount += item.amount;
+    } else {
+      this.ingredients = [...this.ingredients, item];
+    }
+  }
+
+  deleteItem(item: Ingredient): void {
+    this.ingredients = this.ingredients.filter((i) => i.name !== item.name);
+  }
 }
