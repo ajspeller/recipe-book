@@ -5,8 +5,8 @@
 </div>
 <div class="row">
   <div class="col-xs-12">
-    <app-recipe-item (click)="getRecipe(recipe)"
-                     *ngFor="let recipe of recipes"
+    <app-recipe-item [routerLink]="[id]"
+                     *ngFor="let recipe of recipes; let id = index"
                      [recipe]="recipe"></app-recipe-item>
   </div>
 </div>
