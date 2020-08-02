@@ -16,9 +16,9 @@ export class ShoppingEditComponent implements OnInit {
   @ViewChild('nameInput') nameInputRef: ElementRef;
   @ViewChild('amountInput') amountInputRef: ElementRef;
 
-  constructor(private shoppingListService: ShoppingListService) {}
+  constructor(private shoppingListService: ShoppingListService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   addItemVC(): void {
     const name = this.nameInputRef.nativeElement.value;
@@ -27,7 +27,7 @@ export class ShoppingEditComponent implements OnInit {
       return;
     }
     const newItem = new Ingredient(name, amount);
-    this.shoppingListService.getItemToAdd().emit(newItem);
+    this.shoppingListService.getItemToAdd().next(newItem);
     this.nameInputRef.nativeElement.value = '';
     this.amountInputRef.nativeElement.value = 1;
   }
@@ -36,7 +36,7 @@ export class ShoppingEditComponent implements OnInit {
     if (!name || !amount) {
       return;
     }
-    this.shoppingListService.getItemToAdd().emit(new Ingredient(name, +amount));
+    this.shoppingListService.getItemToAdd().next(new Ingredient(name, +amount));
   }
 
   deleteItem({ value: name }, { value: amount }): void {
@@ -45,7 +45,7 @@ export class ShoppingEditComponent implements OnInit {
     }
     this.shoppingListService
       .getItemToDelete()
-      .emit(new Ingredient(name, +amount));
+      .next(new Ingredient(name, +amount));
   }
 
   deleteItemVC(): void {
@@ -53,7 +53,7 @@ export class ShoppingEditComponent implements OnInit {
     if (!name) {
       return;
     }
-    this.shoppingListService.getItemToDelete().emit(new Ingredient(name, 0));
+    this.shoppingListService.getItemToDelete().next(new Ingredient(name, 0));
   }
 
   clearFields(): void {
