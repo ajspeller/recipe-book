@@ -1,22 +1,43 @@
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ComponentFactoryResolver,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 
+import { Observable, Subscription } from 'rxjs';
+
 import { AuthService } from './auth.service';
+
 import { AuthResponseData } from './auth-response-data';
-import { Observable } from 'rxjs';
+
+import { PlaceholderDirective } from './../shared/placeholder.directive';
+
+import { AlertComponent } from './../shared/alert/alert.component';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss'],
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
+  @ViewChild(PlaceholderDirective, { static: false })
+  alertHost: PlaceholderDirective;
+
   isLoginMode = true;
   isLoading = false;
   error: string = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  subscriptions: Subscription[] = [];
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver
+  ) {}
 
   ngOnInit(): void {}
 
@@ -48,6 +69,7 @@ export class AuthComponent implements OnInit {
       (errorMessage) => {
         console.log(errorMessage);
         this.error = errorMessage;
+        this.showErrorAlert(errorMessage);
         this.isLoading = false;
       }
     );
@@ -57,5 +79,28 @@ export class AuthComponent implements OnInit {
 
   onHandleError(): void {
     this.error = null;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+
+  private showErrorAlert(message: string): void {
+    const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
+      AlertComponent
+    );
+
+    const hostViewContainerRef = this.alertHost.viewContainerRef;
+    hostViewContainerRef.clear();
+
+    const componentRef = hostViewContainerRef.createComponent(
+      alertComponentFactory
+    );
+
+    componentRef.instance.message = message;
+    componentRef.instance.closeDialog.subscribe(() => {
+      hostViewContainerRef.clear();
+      this.subscriptions.forEach((s) => s.unsubscribe());
+    });
   }
 }
