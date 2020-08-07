@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { Recipe } from '../recipes/models/Recipe.model';
 
+import { AuthService } from './../auth/auth.service';
+
 import { RecipeService } from './../recipes/recipe.service';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,11 @@ import { Observable } from 'rxjs';
 export class DataStorageService {
   private url = `https://recipe-book-179de.firebaseio.com/`;
 
-  constructor(private http: HttpClient, private recipeService: RecipeService) {}
+  constructor(
+    private http: HttpClient,
+    private recipeService: RecipeService,
+    private authService: AuthService
+  ) {}
 
   storeRecipes(): void {
     const recipes = this.recipeService.getRecipes();
