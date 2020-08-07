@@ -1,51 +1,44 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import { Ingredient } from './models/Ingredient.model';
+import { Injectable } from '@angular/core';
+
 import { Subject } from 'rxjs';
+
+import { Ingredient } from './models/Ingredient.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShoppingListService {
-  private itemToAdd = new Subject<Ingredient>();
-  private itemToDelete = new Subject<Ingredient>();
+  ingredientChanged = new Subject<Ingredient[]>();
+  startedEditing = new Subject<number>();
 
   private ingredients: Ingredient[] = [
     new Ingredient('beef', 2),
-    new Ingredient('lettuce', 2),
-    new Ingredient('tomato', 2),
-    new Ingredient('cheese', 2),
-    new Ingredient('mayo', 2),
-    new Ingredient('mustard', 2),
-    new Ingredient('ketchup', 2),
-    new Ingredient('onion', 2),
-    new Ingredient('wheat bun', 1),
+    new Ingredient('lettuce', 4),
+    new Ingredient('tomato', 6),
   ];
-  constructor() { }
+  constructor() {}
 
   getIngredients(): Ingredient[] {
+    console.log({ i: this.ingredients.slice() });
     return this.ingredients.slice();
   }
 
-  addItem(item: Ingredient): void {
-    const itemIndex = this.ingredients.findIndex(
-      (i) => i.name.toLowerCase() === item.name.toLowerCase()
-    );
-    if (itemIndex > -1) {
-      this.ingredients[itemIndex].amount += item.amount;
-    } else {
-      this.ingredients = [...this.ingredients, item];
-    }
+  getIngredient(id: number): Ingredient {
+    return this.getIngredients()[id];
   }
 
-  deleteItem(item: Ingredient): void {
-    this.ingredients = this.ingredients.filter((i) => i.name !== item.name);
+  addIngredient(item: Ingredient): void {
+    this.ingredients.push(item);
+    this.ingredientChanged.next(this.getIngredients());
   }
 
-  getItemToAdd(): Subject<Ingredient> {
-    return this.itemToAdd;
+  updateIngredient(index, newIngredient: Ingredient): void {
+    this.ingredients[index] = newIngredient;
+    this.ingredientChanged.next(this.getIngredients());
   }
 
-  getItemToDelete(): Subject<Ingredient> {
-    return this.itemToDelete;
+  deleteIngredient(index: number): void {
+    this.ingredients.splice(index, 1);
+    this.ingredientChanged.next(this.getIngredients());
   }
 }
