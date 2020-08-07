@@ -15,8 +15,10 @@
              style="cursor: pointer">Manage <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a style="cursor: pointer"
+                   (click)="onSaveData()"
                    routerLink="">Save</a></li>
             <li><a style="cursor: pointer"
+                   (click)="onFetchData()"
                    routerLink="">Fetch</a></li>
           </ul>
         </li>
