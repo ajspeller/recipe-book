@@ -19,7 +19,6 @@ export class ShoppingListService {
   constructor() {}
 
   getIngredients(): Ingredient[] {
-    console.log({ i: this.ingredients.slice() });
     return this.ingredients.slice();
   }
 

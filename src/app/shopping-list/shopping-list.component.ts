@@ -25,7 +25,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   getIngredients(): void {
     this.ingredients = this.shoppingListService.getIngredients();
-    console.log(this.ingredients);
   }
 
   addItem(item: Ingredient): void {

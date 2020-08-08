@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 
 import { AuthResponseData } from './auth-response-data';
 
-import { PlaceholderDirective } from './../shared/placeholder.directive';
+import { PlaceholderDirective } from '../shared/directive/placeholder/placeholder.directive';
 
 import { AlertComponent } from './../shared/alert/alert.component';
 
