@@ -12,7 +12,7 @@ import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 
 const routes: Routes = [
   {
-    path: 'recipes',
+    path: '',
     component: RecipesComponent,
     children: [
       { path: '', component: RecipeStartComponent, canActivate: [AuthGuard] },
